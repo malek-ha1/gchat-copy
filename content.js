@@ -217,7 +217,7 @@ function main() {
                         }
                         if (elRef.className.includes('nF6pT')) {
 
-                            var messageIndex, name;
+                            var messageIndex, name, userId;
                             [...elRef.parentElement.children].forEach((messageEl, index) => {
                                 if (messageEl ===  elRef) {
                                     messageIndex = index;
@@ -230,6 +230,7 @@ function main() {
                                     if (elRef.parentElement.children[messageIndex].className.includes('AnmYv')) {
                                         const nameContainer = elRef.parentElement.children[messageIndex].querySelector('[data-hovercard-id], [data-member-id]');
                                         name = nameContainer.getAttribute('data-name');
+                                        userId = nameContainer.getAttribute('data-member-id').match(/user\/human\/([^\\"]*)/)[1]
                                         break;
                                         // Can extract time, but adding it into static text surrounded by relative time that's rendered in the chats will only confuse people
                                         // time = el.Ref.parentElement.children[messageIndex].querySelector('span[data-absolute-timestamp]').getAttribute('data-absolute-timestamp');
@@ -247,7 +248,7 @@ function main() {
                                     return;
                                 }
 
-                                inputEl.innerHTML = makeInputText(name, quoteText, inputEl, messageContainer);
+                                inputEl.innerHTML = makeInputText(userId, name, quoteText, inputEl, messageContainer);
                                 inputEl.scrollIntoView();
                                 inputEl.click();
                                 placeCaretAtEnd(inputEl);
@@ -263,7 +264,7 @@ function main() {
     }
 }
 
-function makeInputText(name, quoteText, inputEl, messageContainer) {
+function makeInputText(userId, name, quoteText, inputEl, messageContainer) {
     var isDM = window.location.href.includes('/dm/');
     var selection = window.getSelection().toString();
     var text = getText(messageContainer);
@@ -287,9 +288,16 @@ function makeInputText(name, quoteText, inputEl, messageContainer) {
         return oneLineQuote ? '`' + oneLineQuote + '`\n' :
             ("```\n" + quoteText + "\n```\n" + inputEl.innerHTML)
     } else {
-
-        return oneLineQuote ? '`' + name + ': ' + oneLineQuote + '`\n' :
-            ("```\n" + name + ":\n" + quoteText + "\n```\n" + inputEl.innerHTML);
+        mention =` 
+        <span class="PMAryf"
+         data-user-id="${userId}"
+         data-user-type="0"
+         data-user-mention-type="3"
+         data-display-name="@${name}"
+         contenteditable="false">${name}</span>
+        `.trim()
+        return oneLineQuote ? '`' + mention + ': ' + oneLineQuote + '`\n' :
+            ("```\n" + mention + ":\n" + quoteText + "\n```\n" + inputEl.innerHTML);
     }
 }
 
