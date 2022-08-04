@@ -296,8 +296,8 @@ function makeInputText(userId, name, quoteText, inputEl, messageContainer) {
          data-display-name="@${name}"
          contenteditable="false">${name}</span>
         `.trim()
-        return oneLineQuote ? '`' + mention + ': ' + oneLineQuote + '`\n' :
-            ("```\n" + mention + ":\n" + quoteText + "\n```\n" + inputEl.innerHTML);
+        return oneLineQuote ? mention + '`' + name + ': ' + oneLineQuote + '`\n' :
+            (mention + "```\n" + name + ":\n" + quoteText + "\n```\n" + inputEl.innerHTML);
     }
 }
 
